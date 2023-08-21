@@ -2,7 +2,9 @@ import "./App.css";
 
 import styled from "styled-components";
 
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Landing from "./Pages/Landing";
+import Home from "./Pages/Home";
 
 const Container = styled.div`
   width: 100vw;
@@ -13,9 +15,14 @@ const Container = styled.div`
 
 function App() {
   return (
-    <Container>
-      <Landing />
-    </Container>
+    <BrowserRouter>
+      <Container>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="home" element={<Home />} />
+        </Routes>
+      </Container>
+    </BrowserRouter>
   );
 }
 
