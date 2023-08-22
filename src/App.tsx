@@ -3,8 +3,10 @@ import "./App.css";
 import styled from "styled-components";
 
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
 import Landing from "./Pages/Landing";
 import Home from "./Pages/Home";
+import store from "./Store";
 
 const Container = styled.div`
   width: 100vw;
@@ -15,14 +17,16 @@ const Container = styled.div`
 
 function App() {
   return (
-    <BrowserRouter>
-      <Container>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="home" element={<Home />} />
-        </Routes>
-      </Container>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Container>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="home" element={<Home />} />
+          </Routes>
+        </Container>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

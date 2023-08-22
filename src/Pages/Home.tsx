@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { RiArrowLeftSLine } from "react-icons/ri";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import userIcon from "../assets/userImg.png";
 import MainImg from "../assets/mainImg.png";
 import MenuBar from "../Components/MenuBar";
@@ -81,7 +81,12 @@ const WorkList = styled.div`
   > div {
     font-size: 25px;
     color: white;
-    margin-left: 20px;
+    display: flex;
+    align-items: center;
+
+    > div {
+      margin-left: 20px;
+    }
   }
 `;
 function Home() {
@@ -112,11 +117,11 @@ function Home() {
 
       {isOpen && <MenuBar handleMenu={handleMenu} isOpen={isOpen} />}
 
-      {/* <MenuBar handleMenu={handleMenu} isOpen={isOpen} /> */}
-
       <WorkList>
-        <AiFillPlusSquare color="white" size="40" />
-        <div>근무지 등록하기</div>
+        <div>
+          <AiFillPlusSquare color="white" size="40" />
+          <div>근무지 등록하기</div>
+        </div>
       </WorkList>
     </Container>
   );
