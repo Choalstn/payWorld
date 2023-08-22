@@ -2,7 +2,6 @@ import { css, styled } from "styled-components";
 import landingImg from "../assets/landingImg.png";
 import kakaoIcon from "../assets/kakaoIcon.png";
 import googleIcon from "../assets/googleIcon.png";
-import payWordlIcon from "../assets/payWorldIcon.png";
 
 interface LoginBtnProps {
   howLogin: string;
