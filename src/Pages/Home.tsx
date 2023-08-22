@@ -1,8 +1,10 @@
 import { styled } from "styled-components";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { RiArrowLeftSLine } from "react-icons/ri";
+import { useEffect, useState } from "react";
 import userIcon from "../assets/userImg.png";
 import MainImg from "../assets/mainImg.png";
+import MenuBar from "../Components/MenuBar";
 
 const Container = styled.div`
   display: flex;
@@ -83,6 +85,12 @@ const WorkList = styled.div`
   }
 `;
 function Home() {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Container>
       <Header>
@@ -98,9 +106,13 @@ function Home() {
         <img className="greetImg" src={MainImg} alt="홈  화면 메인 이미지" />
       </Main>
 
-      <MenuTab>
+      <MenuTab onClick={handleMenu}>
         <RiArrowLeftSLine color="white" size="40" />
       </MenuTab>
+
+      {isOpen && <MenuBar handleMenu={handleMenu} isOpen={isOpen} />}
+
+      {/* <MenuBar handleMenu={handleMenu} isOpen={isOpen} /> */}
 
       <WorkList>
         <AiFillPlusSquare color="white" size="40" />
