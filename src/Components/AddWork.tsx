@@ -1,5 +1,9 @@
+/* eslint-disable no-console */
 import { styled } from "styled-components";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addWork } from "../Store/WorkSlice";
 
 interface ContainerProp {
   isAdd: boolean;
@@ -146,7 +150,27 @@ interface AddWorkProp {
   handleIsAdd: () => void;
   isAdd: boolean;
 }
+
 function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
+  const dispatch = useDispatch();
+
+  const [work, setWork] = useState({
+    name: "",
+    payPeriod: "",
+    payDay: 0,
+    color: "",
+    isTax: false,
+    tax: null,
+    isInsurance: false,
+    insurance: null,
+  });
+
+  const handlePressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const { value } = e.currentTarget;
+      setWork((prevWork) => ({ ...prevWork, name: value }));
+    }
+  };
   return (
     <>
       <Overlay onClick={() => handleIsAdd()} />
@@ -156,31 +180,36 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
         <Question>
           <Label>근무지명</Label>
 
-          <PlaceName />
+          <PlaceName onKeyUp={(e) => handlePressEnter(e)} />
         </Question>
 
-        <Question>
-          <Label>급여일</Label>
-          <div className="payPeriod">
-            <div className="choosePeriod">한 달 동안</div>
-            근무한 돈을
-          </div>
-          <div className="payDay">
-            <div className="chooseDay">10일</div>에 받아요
-          </div>
-        </Question>
+        {work.name.length > 0 && (
+          <Question>
+            <Label>급여일</Label>
+            <div className="payPeriod">
+              <div className="choosePeriod">한 달 동안</div>
+              근무한 돈을
+            </div>
+            <div className="payDay">
+              <div className="chooseDay">10일</div>에 받아요
+            </div>
+          </Question>
+        )}
 
-        <Color>
-          색상
-          <div className="circle" />
-        </Color>
-
-        <Insurance>
-          세금 및 4대보험
-          <div>
-            설정하기 <MdKeyboardArrowRight size="25" />{" "}
-          </div>
-        </Insurance>
+        {work.payPeriod.length > 0 && work.payDay > 0 && (
+          <>
+            <Color>
+              색상
+              <div className="circle" />
+            </Color>
+            <Insurance>
+              세금 및 4대보험
+              <div>
+                설정하기 <MdKeyboardArrowRight size="25" />{" "}
+              </div>
+            </Insurance>
+          </>
+        )}
       </Container>
     </>
   );
