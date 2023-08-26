@@ -17,6 +17,11 @@ interface ContainerProp {
   isAdd: boolean;
 }
 
+interface CircleProp {
+  color: string;
+  picker: boolean | undefined;
+}
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -157,13 +162,6 @@ const Color = styled.div`
   justify-content: space-between;
   padding-right: 10px;
   margin-bottom: 20px;
-
-  .circle {
-    border-radius: 50%;
-    width: 21px;
-    height: 15x;
-    background-color: #0084ff36;
-  }
 `;
 
 const Insurance = styled.div`
@@ -190,6 +188,29 @@ const StyledBsCheckLg = styled(BsCheckLg)`
   }
 `;
 
+const Circle = styled.div<CircleProp>`
+  border-radius: 50%;
+  width: 21px;
+  background-color: #0084ff36;
+  background-color: ${(props) => props.color};
+  animation: ${({ picker }) => picker && "slide-in 0.8s ease"} !important ;
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 interface AddWorkProp {
   handleIsAdd: () => void;
   isAdd: boolean;
@@ -200,11 +221,14 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
   const [expandedDay, setExpandedDay] = useState<boolean>(false);
   const [chosenPeriod, setChoosenPeriod] = useState<string>("");
   const [chosenDay, setChoosenDay] = useState<number>();
+  const [openColor, setOpenColor] = useState<boolean>(false);
+  const [selectColor, setSelectColor] = useState<string>("");
 
   const dispatch = useDispatch();
 
   const period = ["한 달", "일주일", "2주", "당일", "한 달에 2번"];
   const days = Array.from({ length: 31 }, (_, index) => index + 1);
+  const colors = ["#00ba3536", "#FF961B36", "#FF3B3B36", "#0084ff36"];
 
   const [work, setWork] = useState({
     name: "",
@@ -271,7 +295,6 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
               근무한 돈을
             </div>
             <div className="payDay">
-              {" "}
               <Accordion
                 className="choosePeriod"
                 expanded={expandedDay}
@@ -310,7 +333,26 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
           <>
             <Color>
               색상
-              <div className="circle" />
+              {openColor && (
+                <>
+                  {colors.map((el, idx) => (
+                    <Circle
+                      key={idx}
+                      color={el}
+                      picker
+                      onClick={() => {
+                        setSelectColor(el);
+                        setOpenColor(false);
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+              <Circle
+                onClick={() => setOpenColor(!openColor)}
+                color={selectColor}
+                picker={false}
+              />
             </Color>
             <Insurance>
               세금 및 4대보험
