@@ -1,9 +1,17 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-console */
 import { styled } from "styled-components";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { BsCheckLg } from "react-icons/bs";
+import { KeyboardEvent, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addWork } from "../Store/WorkSlice";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface ContainerProp {
   isAdd: boolean;
@@ -87,11 +95,38 @@ const Question = styled.div`
     width: 73%;
     color: black;
     font-weight: 400;
-    margin-right: 30px;
-    margin-bottom: 10px;
+    margin-right: 30px !important;
+    margin-bottom: 10px !important;
 
-    &:focus {
-      border-bottom: 2px solid #659aff;
+    .details {
+      > div {
+        font-size: 15px;
+        padding: 15px 5px;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          color: #659aff;
+          font-weight: 700;
+        }
+      }
+    }
+
+    .detailsDay {
+      height: 23vh;
+      overflow-y: scroll;
+
+      > div {
+        font-size: 15px;
+        padding: 15px 5px;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          color: #659aff;
+          font-weight: 700;
+        }
+      }
     }
   }
 `;
@@ -146,13 +181,30 @@ const Insurance = styled.div`
   }
 `;
 
+const StyledBsCheckLg = styled(BsCheckLg)`
+  margin-right: 10px;
+  font-size: 17px;
+
+  &:hover {
+    color: #659aff;
+  }
+`;
+
 interface AddWorkProp {
   handleIsAdd: () => void;
   isAdd: boolean;
 }
 
 function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
+  const [expandedPeriod, setExpandedPeriod] = useState<boolean>(false);
+  const [expandedDay, setExpandedDay] = useState<boolean>(false);
+  const [chosenPeriod, setChoosenPeriod] = useState<string>("");
+  const [chosenDay, setChoosenDay] = useState<number>();
+
   const dispatch = useDispatch();
+
+  const period = ["한 달", "일주일", "2주", "당일", "한 달에 2번"];
+  const days = Array.from({ length: 31 }, (_, index) => index + 1);
 
   const [work, setWork] = useState({
     name: "",
@@ -187,11 +239,69 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
           <Question>
             <Label>급여일</Label>
             <div className="payPeriod">
-              <div className="choosePeriod">한 달 동안</div>
+              <Accordion
+                className="choosePeriod"
+                expanded={expandedPeriod}
+                onClick={() => {
+                  setExpandedPeriod(!expandedPeriod);
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>{chosenPeriod}</Typography>
+                </AccordionSummary>
+                <AccordionDetails className="details">
+                  {period.map((el, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setExpandedPeriod(!expandedPeriod);
+                        setChoosenPeriod(el);
+                        setWork((prevWork) => ({ ...prevWork, payPeriod: el }));
+                      }}
+                    >
+                      <StyledBsCheckLg /> {el}
+                    </div>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
               근무한 돈을
             </div>
             <div className="payDay">
-              <div className="chooseDay">10일</div>에 받아요
+              {" "}
+              <Accordion
+                className="choosePeriod"
+                expanded={expandedDay}
+                onClick={() => {
+                  setExpandedDay(!expandedDay);
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>{chosenDay}</Typography>
+                </AccordionSummary>
+                <AccordionDetails className="detailsDay">
+                  {days.map((el, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setExpandedDay(!expandedDay);
+                        setChoosenDay(el);
+                        setWork((prevWork) => ({ ...prevWork, payDay: el }));
+                      }}
+                    >
+                      <StyledBsCheckLg /> {el}
+                    </div>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+              일에 받아요
             </div>
           </Question>
         )}
