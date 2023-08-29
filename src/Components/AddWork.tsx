@@ -19,6 +19,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Switch from "@mui/material/Switch";
+import { addWork } from "../Store/WorkSlice";
 
 interface ContainerProp {
   isAdd: boolean;
@@ -186,6 +187,7 @@ const Insurance = styled.div`
   justify-content: space-between;
   align-items: center;
   padding-right: 10px;
+  margin-bottom: 20px;
 
   > div {
     display: flex;
@@ -209,7 +211,7 @@ const StyledBsCheckLg = styled(BsCheckLg)`
 `;
 
 const TaxBox = styled.div<TaxBoxProp>`
-  height: 53%;
+  height: 60.2%;
   width: 18%;
   background-color: white;
   display: flex;
@@ -218,7 +220,7 @@ const TaxBox = styled.div<TaxBoxProp>`
   padding: 20px;
   z-index: 1;
   position: absolute;
-  top: 21%;
+  top: 17.5%;
   left: 60%;
   border-radius: 20px;
   animation: ${({ isSetting }) =>
@@ -342,7 +344,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
     name: "",
     payPeriod: "",
     payDay: 0,
-    color: "",
+    color: "#0084ff36",
     isTax: false,
     tax: "",
     isInsurance: false,
@@ -370,6 +372,21 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
       isInsurance: true,
       insurance: content!,
     }));
+  };
+
+  const handleAddWork = () => {
+    dispatch(
+      addWork({
+        name: work.name,
+        payPeriod: work.payPeriod,
+        payDay: work.payDay,
+        color: work.color,
+        isTax: work.isTax,
+        tax: work.tax,
+        isInsurace: work.isInsurance,
+        insurace: work.insurance,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -489,6 +506,8 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
                 설정하기 <MdKeyboardArrowRight size="25" />
               </div>
             </Insurance>
+
+            <SubmitBtn onClick={() => handleIsAdd()}>저장하기</SubmitBtn>
           </>
         )}
       </Container>
