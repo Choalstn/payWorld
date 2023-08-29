@@ -12,6 +12,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Switch from "@mui/material/Switch";
 
 interface ContainerProp {
   isAdd: boolean;
@@ -176,6 +177,10 @@ const Insurance = styled.div`
     align-items: center;
     font-size: 16px;
     color: #5f5f5f;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;
 
@@ -186,6 +191,65 @@ const StyledBsCheckLg = styled(BsCheckLg)`
   &:hover {
     color: #659aff;
   }
+`;
+
+const TaxBox = styled.div`
+  height: 53%;
+  width: 18%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  z-index: 1;
+  position: absolute;
+  top: 21%;
+  left: 70%;
+  border-radius: 20px;
+
+  .title {
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .taxSwitch,
+  .insuranceSwitch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #848484;
+  }
+
+  .btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+`;
+
+const TaxBtn = styled.div`
+  font-size: 15px;
+
+  &:hover {
+    cursor: pointer;
+    color: #659aff;
+    font-weight: 500;
+  }
+`;
+
+const SubmitBtn = styled.div`
+  background-color: #659aff;
+  color: white;
+  border-radius: 15px;
+  padding: 10px;
+  font-weight: 650;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Circle = styled.div<CircleProp>`
@@ -223,6 +287,8 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
   const [chosenDay, setChoosenDay] = useState<number>();
   const [openColor, setOpenColor] = useState<boolean>(false);
   const [selectColor, setSelectColor] = useState<string>("");
+  const [taxChecked, setTaxChecked] = useState<boolean>(false);
+  const [insuranceChecked, setInsuranceChecked] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -363,6 +429,39 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
           </>
         )}
       </Container>
+
+      <TaxBox>
+        <div className="title">세금 및 4대보험 설정</div>
+        <div className="taxSwitch">
+          세금
+          <Switch
+            checked={taxChecked}
+            onChange={() => setTaxChecked(!taxChecked)}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        </div>
+        <div className="subtitle">세금</div>
+        <div className="btns">
+          <TaxBtn>3.3%</TaxBtn>
+          <TaxBtn>3.3%</TaxBtn>
+          <TaxBtn>3.3%</TaxBtn>
+        </div>
+        <div className="insuranceSwitch">
+          4대보험
+          <Switch
+            checked={insuranceChecked}
+            onChange={() => setInsuranceChecked(!insuranceChecked)}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        </div>
+        <div className="subtitle">4대보험</div>
+        <div className="btns">
+          <TaxBtn>4대보험 모두 가입</TaxBtn>
+          <TaxBtn>고용보험만 가입</TaxBtn>
+        </div>
+
+        <SubmitBtn>적용하기</SubmitBtn>
+      </TaxBox>
     </>
   );
 }
