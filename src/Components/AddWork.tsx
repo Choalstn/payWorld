@@ -5,7 +5,13 @@
 import { styled } from "styled-components";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { BsCheckLg } from "react-icons/bs";
-import { KeyboardEvent, useState } from "react";
+import {
+  KeyboardEvent,
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { useDispatch } from "react-redux";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -16,6 +22,7 @@ import Switch from "@mui/material/Switch";
 
 interface ContainerProp {
   isAdd: boolean;
+  isSetting: boolean;
 }
 
 interface CircleProp {
@@ -25,6 +32,10 @@ interface CircleProp {
 
 interface taxInsuranceProp {
   isTrue: boolean;
+}
+
+interface TaxBoxProp {
+  isSetting: boolean;
 }
 
 const Overlay = styled.div`
@@ -48,7 +59,7 @@ const Container = styled.div<ContainerProp>`
   z-index: 1;
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: ${({ isSetting }) => (isSetting ? "40%" : "50%")};
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 20px;
@@ -197,7 +208,7 @@ const StyledBsCheckLg = styled(BsCheckLg)`
   }
 `;
 
-const TaxBox = styled.div`
+const TaxBox = styled.div<TaxBoxProp>`
   height: 53%;
   width: 18%;
   background-color: white;
@@ -208,8 +219,32 @@ const TaxBox = styled.div`
   z-index: 1;
   position: absolute;
   top: 21%;
-  left: 70%;
+  left: 60%;
   border-radius: 20px;
+  animation: ${({ isSetting }) =>
+    isSetting ? "in 0.8s ease" : "slide-out 0.8s ease "} !important ;
+
+  @keyframes in {
+    from {
+      transform: translateX(-50%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-out {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(-50%);
+      opacity: 0;
+    }
+  }
 
   .title {
     font-size: 18px;
@@ -231,7 +266,7 @@ const TaxBox = styled.div`
   .btns {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
   }
 `;
 
@@ -255,6 +290,7 @@ const SubmitBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 const Circle = styled.div<CircleProp>`
@@ -294,6 +330,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
   const [selectColor, setSelectColor] = useState<string>("");
   const [taxChecked, setTaxChecked] = useState<boolean>(false);
   const [insuranceChecked, setInsuranceChecked] = useState<boolean>(false);
+  const [isSetting, setIsSetting] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -307,9 +344,9 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
     payDay: 0,
     color: "",
     isTax: false,
-    tax: null,
+    tax: "",
     isInsurance: false,
-    insurance: null,
+    insurance: "",
   });
 
   const handlePressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -318,10 +355,30 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
       setWork((prevWork) => ({ ...prevWork, name: value }));
     }
   };
+
+  const handleTax = (e: MouseEvent<HTMLDivElement>) => {
+    const clickedDiv = e.target as HTMLDivElement;
+    const content = clickedDiv.textContent;
+    setWork((prevWork) => ({ ...prevWork, isTax: true, tax: content! }));
+  };
+
+  const handleInsurance = (e: MouseEvent<HTMLDivElement>) => {
+    const clickedDiv = e.target as HTMLDivElement;
+    const content = clickedDiv.textContent;
+    setWork((prevWork) => ({
+      ...prevWork,
+      isInsurance: true,
+      insurance: content!,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(work);
+  }, [work]);
   return (
     <>
       <Overlay onClick={() => handleIsAdd()} />
-      <Container isAdd={isAdd}>
+      <Container isAdd={isAdd} isSetting={isSetting}>
         <div className="question"> 어디에서 일하시나요 ?</div>
 
         <Question>
@@ -414,6 +471,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
                       onClick={() => {
                         setSelectColor(el);
                         setOpenColor(false);
+                        setWork((prevWork) => ({ ...prevWork, color: el }));
                       }}
                     />
                   ))}
@@ -427,48 +485,73 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
             </Color>
             <Insurance>
               세금 및 4대보험
-              <div>
-                설정하기 <MdKeyboardArrowRight size="25" />{" "}
+              <div onClick={() => setIsSetting(true)}>
+                설정하기 <MdKeyboardArrowRight size="25" />
               </div>
             </Insurance>
           </>
         )}
       </Container>
 
-      <TaxBox>
-        <div className="title">세금 및 4대보험 설정</div>
-        <div className="taxSwitch">
-          세금
-          <Switch
-            checked={taxChecked}
-            onChange={() => setTaxChecked(!taxChecked)}
-            inputProps={{ "aria-label": "controlled" }}
-          />
-        </div>
+      {isSetting && (
+        <TaxBox isSetting={isSetting}>
+          <div className="title">세금 및 4대보험 설정</div>
+          <div className="taxSwitch">
+            세금
+            <Switch
+              checked={taxChecked}
+              onChange={() => setTaxChecked(!taxChecked)}
+              inputProps={{ "aria-label": "controlled" }}
+            />
+          </div>
 
-        <div className="subtitle">세금</div>
-        <div className="btns">
-          <TaxBtn isTrue={taxChecked}>3.3%</TaxBtn>
-          <TaxBtn isTrue={taxChecked}>3.3%</TaxBtn>
-          <TaxBtn isTrue={taxChecked}>3.3%</TaxBtn>
-        </div>
+          <div className="subtitle">세금</div>
+          <div className="btns">
+            <TaxBtn
+              isTrue={taxChecked}
+              onClick={(e) => {
+                handleTax(e);
+              }}
+            >
+              3.3%
+            </TaxBtn>
+            <TaxBtn
+              isTrue={taxChecked}
+              onClick={(e) => {
+                handleTax(e);
+              }}
+            >
+              소득세 + 4대보험
+            </TaxBtn>
+          </div>
 
-        <div className="insuranceSwitch">
-          4대보험
-          <Switch
-            checked={insuranceChecked}
-            onChange={() => setInsuranceChecked(!insuranceChecked)}
-            inputProps={{ "aria-label": "controlled" }}
-          />
-        </div>
-        <div className="subtitle">4대보험</div>
-        <div className="btns">
-          <TaxBtn isTrue={insuranceChecked}>4대보험 모두 가입</TaxBtn>
-          <TaxBtn isTrue={insuranceChecked}>고용보험만 가입</TaxBtn>
-        </div>
+          <div className="insuranceSwitch">
+            4대보험
+            <Switch
+              checked={insuranceChecked}
+              onChange={() => setInsuranceChecked(!insuranceChecked)}
+              inputProps={{ "aria-label": "controlled" }}
+            />
+          </div>
+          <div className="subtitle">4대보험</div>
+          <div className="btns">
+            <TaxBtn
+              isTrue={insuranceChecked}
+              onClick={(e) => handleInsurance(e)}
+            >
+              4대보험 모두 가입
+            </TaxBtn>
+            <TaxBtn
+              isTrue={insuranceChecked}
+              onClick={(e) => handleInsurance(e)}
+            >
+              고용보험만 가입
+            </TaxBtn>
+          </div>
 
-        <SubmitBtn>적용하기</SubmitBtn>
-      </TaxBox>
+          <SubmitBtn onClick={() => setIsSetting(false)}>적용하기</SubmitBtn>
+        </TaxBox>
+      )}
     </>
   );
 }
