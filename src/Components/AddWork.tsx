@@ -23,6 +23,10 @@ interface CircleProp {
   picker: boolean | undefined;
 }
 
+interface taxInsuranceProp {
+  isTrue: boolean;
+}
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -231,13 +235,14 @@ const TaxBox = styled.div`
   }
 `;
 
-const TaxBtn = styled.div`
+const TaxBtn = styled.div<taxInsuranceProp>`
   font-size: 15px;
+  color: ${({ isTrue }) => (isTrue ? "black" : "#5f5f5f")};
 
   &:hover {
-    cursor: pointer;
-    color: #659aff;
-    font-weight: 500;
+    cursor: ${({ isTrue }) => (isTrue ? "pointer" : "default")};
+    color: ${({ isTrue }) => (isTrue ? "#659aff" : "#5f5f5f")};
+    font-weight: ${({ isTrue }) => (isTrue ? "500" : "default")};
   }
 `;
 
@@ -440,12 +445,14 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
             inputProps={{ "aria-label": "controlled" }}
           />
         </div>
+
         <div className="subtitle">세금</div>
         <div className="btns">
-          <TaxBtn>3.3%</TaxBtn>
-          <TaxBtn>3.3%</TaxBtn>
-          <TaxBtn>3.3%</TaxBtn>
+          <TaxBtn isTrue={taxChecked}>3.3%</TaxBtn>
+          <TaxBtn isTrue={taxChecked}>3.3%</TaxBtn>
+          <TaxBtn isTrue={taxChecked}>3.3%</TaxBtn>
         </div>
+
         <div className="insuranceSwitch">
           4대보험
           <Switch
@@ -456,8 +463,8 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
         </div>
         <div className="subtitle">4대보험</div>
         <div className="btns">
-          <TaxBtn>4대보험 모두 가입</TaxBtn>
-          <TaxBtn>고용보험만 가입</TaxBtn>
+          <TaxBtn isTrue={insuranceChecked}>4대보험 모두 가입</TaxBtn>
+          <TaxBtn isTrue={insuranceChecked}>고용보험만 가입</TaxBtn>
         </div>
 
         <SubmitBtn>적용하기</SubmitBtn>
