@@ -507,7 +507,14 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
               </div>
             </Insurance>
 
-            <SubmitBtn onClick={() => handleIsAdd()}>저장하기</SubmitBtn>
+            <SubmitBtn
+              onClick={() => {
+                handleIsAdd();
+                handleAddWork();
+              }}
+            >
+              저장하기
+            </SubmitBtn>
           </>
         )}
       </Container>

@@ -11,18 +11,7 @@ interface InterWork {
   insurace: string | null;
 }
 
-const initialState: InterWork[] = [
-  {
-    name: "",
-    payPeriod: "한 달 동안",
-    payDay: 10,
-    color: "#659AFF",
-    isTax: false,
-    tax: null,
-    isInsurace: false,
-    insurace: null,
-  },
-];
+const initialState: InterWork[] = [];
 
 const WorkSlice = createSlice({
   name: "workInfo",

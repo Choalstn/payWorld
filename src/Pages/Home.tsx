@@ -1,13 +1,16 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { styled } from "styled-components";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import userIcon from "../assets/userImg.png";
 import MainImg from "../assets/mainImg.png";
 import MenuBar from "../Components/MenuBar";
 import AddWork from "../Components/AddWork";
+import { RootState } from "../Store";
 
 const Container = styled.div`
   display: flex;
@@ -92,9 +95,17 @@ const WorkList = styled.div`
     }
   }
 `;
+
+const WorkItem = styled.div`
+  border: 1px solid red;
+`;
 function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isAdd, setIsAdd] = useState<boolean>(false);
+
+  const workList = useSelector((state: RootState) => state.work);
+
+  console.log(workList);
 
   const handleMenu = () => {
     setIsOpen(!isOpen);
@@ -126,10 +137,18 @@ function Home() {
       {isOpen && <MenuBar handleMenu={handleMenu} isOpen={isOpen} />}
 
       <WorkList>
-        <div onClick={handleIsAdd}>
-          <AiFillPlusSquare color="white" size="40" />
-          <div>근무지 등록하기</div>
-        </div>
+        {workList.length === 0 ? (
+          <div onClick={handleIsAdd}>
+            <AiFillPlusSquare color="white" size="40" />
+            <div>근무지 등록하기</div>
+          </div>
+        ) : (
+          workList.map((el, idx) => (
+            <WorkItem key={idx}>
+              <div>{el.name}</div>
+            </WorkItem>
+          ))
+        )}
       </WorkList>
 
       {isAdd && <AddWork handleIsAdd={handleIsAdd} isAdd={isAdd} />}
