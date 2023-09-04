@@ -502,7 +502,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
             </Color>
             <Insurance>
               세금 및 4대보험
-              <div onClick={() => setIsSetting(true)}>
+              <div onClick={() => setIsSetting(!isSetting)}>
                 설정하기 <MdKeyboardArrowRight size="25" />
               </div>
             </Insurance>
