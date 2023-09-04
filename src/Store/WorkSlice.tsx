@@ -9,6 +9,7 @@ interface InterWork {
   tax: string | null;
   isInsurace: boolean;
   insurace: string | null;
+  pay: number;
 }
 
 const initialState: InterWork[] = [];

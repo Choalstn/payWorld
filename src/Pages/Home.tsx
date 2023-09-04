@@ -4,6 +4,7 @@
 import { styled } from "styled-components";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { RiArrowLeftSLine } from "react-icons/ri";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import userIcon from "../assets/userImg.png";
@@ -97,8 +98,43 @@ const WorkList = styled.div`
 `;
 
 const WorkItem = styled.div`
-  border: 1px solid red;
+  width: 80%;
+  border-radius: 45px;
+  padding: 10px;
+  height: 30%;
+  background-color: white;
+
+  > div {
+    height: 100%;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 30px;
+  }
+
+  .name {
+    padding: 0px 30px;
+    width: 10%;
+  }
+
+  .line {
+    border-right: 1px solid black;
+    height: 70%;
+  }
+
+  .pay {
+    width: 70%;
+    justify-content: flex-start;
+    padding: 0px 30px;
+  }
+
+  .etc {
+    width: 8%;
+  }
 `;
+
 function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isAdd, setIsAdd] = useState<boolean>(false);
@@ -145,7 +181,12 @@ function Home() {
         ) : (
           workList.map((el, idx) => (
             <WorkItem key={idx}>
-              <div>{el.name}</div>
+              <div className="name">{el.name}</div>
+              <div className="line" />
+              <div className="pay"> ₩ {el.pay}</div>
+              <div className="etc">
+                <HiOutlineDotsVertical />
+              </div>
             </WorkItem>
           ))
         )}

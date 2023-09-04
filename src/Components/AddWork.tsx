@@ -385,6 +385,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
         tax: work.tax,
         isInsurace: work.isInsurance,
         insurace: work.insurance,
+        pay: 0,
       }),
     );
   };
