@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/redux-persist": "^4.3.1",
     "eslint": "^8.47.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",
@@ -59,6 +60,7 @@
     "react-redux": "^8.1.2",
     "react-router": "^6.15.0",
     "react-router-dom": "^6.15.0",
+    "redux-persist": "^6.0.0",
     "styled-components": "^6.0.7"
   }
 }
