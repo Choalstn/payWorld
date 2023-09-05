@@ -5,28 +5,30 @@ import logo from "../assets/logo.png";
 interface ContainerProp {
   isOpen: boolean;
 }
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  z-index: 0;
+  min-height: 100%;
   cursor: pointer;
 `;
 
-const Contaner = styled.div<ContainerProp>`
-  z-index: 1;
-  height: 100%;
-  position: absolute;
+const Container = styled.div<ContainerProp>`
+  position: fixed;
+  top: 0;
   right: 0;
   width: 27%;
+  min-height: 100%;
   background-color: white;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
   box-shadow: -20px 0px 100px 20px rgba(0, 0, 0, 0.2);
+
   animation: ${({ isOpen }) =>
     isOpen ? "slide-in 0.8s ease" : "slide-out 0.8s ease "} !important ;
 
@@ -79,12 +81,12 @@ function MenuBar({ handleMenu, isOpen }: MenuBarProps) {
   return (
     <>
       <Overlay onClick={() => handleMenu()} />
-      <Contaner isOpen={isOpen}>
+      <Container isOpen={isOpen}>
         <img src={logo} alt="payWorld 로고 이미지" />
         <div className="first">공지사항</div>
         <div>근무일지</div>
         <div>마이페이지</div>
-      </Contaner>
+      </Container>
     </>
   );
 }
