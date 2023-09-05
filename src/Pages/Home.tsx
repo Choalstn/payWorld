@@ -2,16 +2,21 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { styled } from "styled-components";
-import { AiFillPlusSquare } from "react-icons/ai";
+import {
+  AiFillPlusSquare,
+  AiOutlineEdit,
+  AiOutlineDelete,
+} from "react-icons/ai";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import userIcon from "../assets/userImg.png";
 import MainImg from "../assets/mainImg.png";
 import MenuBar from "../Components/MenuBar";
 import AddWork from "../Components/AddWork";
 import { RootState } from "../Store";
+import { deleteWork } from "../Store/WorkSlice";
 
 const Container = styled.div`
   display: flex;
@@ -141,15 +146,33 @@ const WorkItem = styled.div`
     width: 8%;
     cursor: pointer;
   }
+
+  .editDelete {
+    width: 70px;
+    margin-left: -10px;
+    display: flex;
+    justify-content: space-between;
+    animation: in 0.5s ease;
+
+    @keyframes in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  }
 `;
 
 function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isAdd, setIsAdd] = useState<boolean>(false);
+  const [isSet, setIstSet] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
 
   const workList = useSelector((state: RootState) => state.work);
-
-  console.log(workList);
 
   const handleMenu = () => {
     setIsOpen(!isOpen);
@@ -188,12 +211,23 @@ function Home() {
           </div>
         ) : (
           workList.map((el, idx) => (
-            <WorkItem key={idx}>
+            <WorkItem key={idx} onClick={() => setIstSet(!isSet)}>
               <div className="name">{el.name}</div>
               <div className="line" />
               <div className="pay"> ₩ {el.pay}</div>
               <div className="etc">
-                <HiOutlineDotsVertical />
+                {isSet ? (
+                  <div className="editDelete">
+                    <AiOutlineEdit />
+                    <AiOutlineDelete
+                      onClick={() => {
+                        dispatch(deleteWork({ name: el.name }));
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <HiOutlineDotsVertical onClick={() => setIstSet(!isSet)} />
+                )}
               </div>
             </WorkItem>
           ))

@@ -12,6 +12,10 @@ interface InterWork {
   pay: number;
 }
 
+interface DeleteType {
+  name: string;
+}
+
 const initialState: InterWork[] = [];
 
 const WorkSlice = createSlice({
@@ -21,9 +25,21 @@ const WorkSlice = createSlice({
     addWork: (state: InterWork[], action: PayloadAction<InterWork>) => {
       return [...state, action.payload];
     },
+
+    deleteWork: (state: InterWork[], action: PayloadAction<DeleteType>) => {
+      const copiedState = state.map((el) => ({ ...el }));
+
+      const targetIndex = copiedState.findIndex(
+        (el) => el.name === action.payload.name,
+      );
+
+      copiedState.splice(targetIndex, 1);
+
+      return copiedState;
+    },
   },
 });
 
-export const { addWork } = WorkSlice.actions;
+export const { addWork, deleteWork } = WorkSlice.actions;
 
 export default WorkSlice.reducer;

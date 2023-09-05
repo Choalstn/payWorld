@@ -10,7 +10,6 @@ const reducers = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["work"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
