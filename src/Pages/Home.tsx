@@ -199,10 +199,12 @@ function Home() {
           ))
         )}
 
-        <div onClick={handleIsAdd} className="addWorkBtn">
-          <AiFillPlusSquare color="white" size="40" />
-          <div>새로운 근무지 등록하기</div>
-        </div>
+        {workList.length > 0 && (
+          <div onClick={handleIsAdd} className="addWorkBtn">
+            <AiFillPlusSquare color="white" size="40" />
+            <div>새로운 근무지 등록하기</div>
+          </div>
+        )}
       </WorkList>
 
       {isAdd && <AddWork handleIsAdd={handleIsAdd} isAdd={isAdd} />}
