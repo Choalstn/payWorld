@@ -5,13 +5,7 @@
 import { styled } from "styled-components";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { BsCheckLg } from "react-icons/bs";
-import {
-  KeyboardEvent,
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -76,11 +70,9 @@ const Container = styled.div<ContainerProp>`
 
   @keyframes slide-in {
     from {
-      transform: translateX(100%);
       opacity: 0;
     }
     to {
-      transform: translateX(0);
       opacity: 1;
     }
   }
