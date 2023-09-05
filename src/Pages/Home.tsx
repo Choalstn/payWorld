@@ -79,21 +79,27 @@ const MenuTab = styled.div`
 
 const WorkList = styled.div`
   height: 100%;
+  overflow-y: visible;
   background-color: #659aff;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-top: 10px;
 
   > div {
     font-size: 25px;
     color: white;
     display: flex;
     align-items: center;
-    cursor: pointer;
 
     > div {
       margin-left: 20px;
     }
+  }
+
+  .addWorkBtn {
+    margin: 25px 0;
   }
 `;
 
@@ -101,8 +107,9 @@ const WorkItem = styled.div`
   width: 80%;
   border-radius: 45px;
   padding: 10px;
-  height: 30%;
+  height: 100px;
   background-color: white;
+  margin-top: 30px;
 
   > div {
     height: 100%;
@@ -132,6 +139,7 @@ const WorkItem = styled.div`
 
   .etc {
     width: 8%;
+    cursor: pointer;
   }
 `;
 
@@ -190,6 +198,11 @@ function Home() {
             </WorkItem>
           ))
         )}
+
+        <div onClick={handleIsAdd} className="addWorkBtn">
+          <AiFillPlusSquare color="white" size="40" />
+          <div>새로운 근무지 등록하기</div>
+        </div>
       </WorkList>
 
       {isAdd && <AddWork handleIsAdd={handleIsAdd} isAdd={isAdd} />}
