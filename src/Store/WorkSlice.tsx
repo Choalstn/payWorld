@@ -3,7 +3,9 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 interface InterWork {
   name: string;
   payPeriod: string;
-  payDay: number;
+  payDay: string;
+  payDate: number;
+  payWeek: string;
   color: string;
   isTax: boolean;
   tax: string | null;
