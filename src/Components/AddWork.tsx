@@ -579,6 +579,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
           </Question>
         )}
 
+<<<<<<< HEAD
         {(work.payPeriod.length > 0 && work.payDate) ||
           (work.payWeek.length > 0 && work.payDay.length > 0 && (
             <>
@@ -623,6 +624,52 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
               </SubmitBtn>
             </>
           ))}
+=======
+        {(work.payWeek.length > 0 && work.payDay.length > 0) ||
+        (work.payPeriod.length > 0 && work.payDate > 0) ? (
+          <>
+            <Color>
+              색상
+              {openColor && (
+                <>
+                  {colors.map((el, idx) => (
+                    <Circle
+                      key={idx}
+                      color={el}
+                      picker
+                      onClick={() => {
+                        setSelectColor(el);
+                        setOpenColor(false);
+                        setWork((prevWork) => ({ ...prevWork, color: el }));
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+              <Circle
+                onClick={() => setOpenColor(!openColor)}
+                color={selectColor}
+                picker={false}
+              />
+            </Color>
+            <Insurance>
+              세금 및 4대보험
+              <div onClick={() => setIsSetting(!isSetting)}>
+                설정하기 <MdKeyboardArrowRight size="25" />
+              </div>
+            </Insurance>
+
+            <SubmitBtn
+              onClick={() => {
+                handleIsAdd();
+                handleAddWork();
+              }}
+            >
+              저장하기
+            </SubmitBtn>
+          </>
+        ) : null}
+>>>>>>> 256f878e4a075ca391e1c7d4e88331088294c5bb
       </Container>
 
       {isSetting && (
