@@ -579,8 +579,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
           </Question>
         )}
 
-        {(work.payWeek.length > 0 && work.payDay.length > 0) ||
-        (work.payPeriod.length > 0 && work.payDate > 0) ? (
+        {work.payPeriod.length > 0 && work.payDay > 0 && (
           <>
             <Color>
               색상
@@ -622,7 +621,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
               저장하기
             </SubmitBtn>
           </>
-        ) : null}
+        )}
       </Container>
 
       {isSetting && (
