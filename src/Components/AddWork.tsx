@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -103,7 +104,9 @@ const Question = styled.div`
   }
 
   .choosePeriod,
-  .chooseDay {
+  .chooseDay,
+  .chooseDate,
+  .chooseWeek {
     border-bottom: 1px solid #e3e2e3;
     padding: 3px 5px;
     width: 73%;
@@ -126,19 +129,19 @@ const Question = styled.div`
       }
     }
 
-    .weekPeriod {
-      display: flex;
+    .detailsWeek {
+      height: max-content;
 
-      .detailsDay {
-        width: 100%;
+      > div {
+        font-size: 15px;
+        padding: 15px 5px;
         display: flex;
-        flex-direction: column;
         align-items: center;
-      }
 
-      > div:first-child {
-        justify-content: center;
-        border-right: 1px solid #e3e2e3;
+        &:hover {
+          color: #659aff;
+          font-weight: 700;
+        }
       }
     }
 
@@ -333,9 +336,13 @@ interface AddWorkProp {
 
 function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
   const [expandedPeriod, setExpandedPeriod] = useState<boolean>(false);
+  const [expandedDate, setExpandedDate] = useState<boolean>(false);
+  const [expandedWeek, setExpandedWeek] = useState<boolean>(false);
   const [expandedDay, setExpandedDay] = useState<boolean>(false);
   const [chosenPeriod, setChoosenPeriod] = useState<string>("");
-  const [chosenDay, setChoosenDay] = useState<number>();
+  const [chosenDate, setChoosenDate] = useState<number>();
+  const [chosenWeek, setChoosenWeek] = useState<string>("");
+  const [chosenDay, setChoosenDay] = useState<string>("");
   const [openColor, setOpenColor] = useState<boolean>(false);
   const [selectColor, setSelectColor] = useState<string>("");
   const [taxChecked, setTaxChecked] = useState<boolean>(false);
@@ -360,7 +367,9 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
   const [work, setWork] = useState({
     name: "",
     payPeriod: "",
-    payDay: 0,
+    payDate: 0,
+    payWeek: "",
+    payDay: "",
     color: "#0084ff36",
     isTax: false,
     tax: "",
@@ -383,11 +392,21 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
 
   const handleInsurance = (e: MouseEvent<HTMLDivElement>) => {
     const clickedDiv = e.target as HTMLDivElement;
-    const content = clickedDiv.textContent;
+    const content = clickedDiv.textContent!;
     setWork((prevWork) => ({
       ...prevWork,
       isInsurance: true,
-      insurance: content!,
+      insurance: content,
+    }));
+  };
+
+  const handleWeek = (e: MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    const content = target.textContent!;
+    setChoosenWeek(content);
+    setWork((prevWork) => ({
+      ...prevWork,
+      payWeek: content,
     }));
   };
 
@@ -396,7 +415,9 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
       addWork({
         name: work.name,
         payPeriod: work.payPeriod,
+        payDate: work.payDate,
         payDay: work.payDay,
+        payWeek: work.payWeek,
         color: work.color,
         isTax: work.isTax,
         tax: work.tax,
@@ -407,7 +428,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
     );
   };
 
-  console.log(chosenPeriod);
+  console.log(work);
   return (
     <>
       <Overlay onClick={() => handleIsAdd()} />
@@ -423,7 +444,6 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
         {work.name.length > 0 && (
           <Question>
             <Label>급여일</Label>
-
             {/* 근무기간 */}
             <div className="payPeriod">
               <Accordion
@@ -457,49 +477,96 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
               </Accordion>
               근무한 돈을
             </div>
-
             {/* 급여일  */}
-            <div className="payDay">
-              <Accordion
-                className="choosePeriod"
-                expanded={expandedDay}
-                onClick={() => {
-                  setExpandedDay(!expandedDay);
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>{chosenDay}</Typography>
-                </AccordionSummary>
-
-                {/* 근무기간에 따른 Details 조건부 */}
-                {chosenPeriod === "일주일" || chosenPeriod === "2주" ? (
-                  <div className="weekPeriod">
-                    <AccordionDetails className="detailsDay">
-                      <div>1주 후 </div>
-                      <div>2주 후 </div>
+            {chosenPeriod === "일주일" || chosenPeriod === "2주" ? (
+              <>
+                <div className="payDay">
+                  <Accordion
+                    className="chooseWeek"
+                    expanded={expandedWeek}
+                    onClick={() => {
+                      setExpandedWeek(!expandedWeek);
+                    }}
+                  >
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      <Typography>{chosenWeek}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails className="detailsWeek">
+                      <div onClick={(e) => handleWeek(e)}>
+                        <StyledBsCheckLg /> 1주 후
+                      </div>
+                      <div onClick={(e) => handleWeek(e)}>
+                        <StyledBsCheckLg /> 2주 후
+                      </div>
                     </AccordionDetails>
+                  </Accordion>
+                </div>
 
+                <div className="payDay">
+                  <Accordion
+                    className="chooseDay"
+                    expanded={expandedDay}
+                    onClick={() => {
+                      setExpandedDay(!expandedDay);
+                    }}
+                  >
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      <Typography>{chosenDay}</Typography>
+                    </AccordionSummary>
                     <AccordionDetails className="detailsDay">
                       {week.map((el, idx) => (
-                        <div key={idx}>{el}</div>
+                        <div
+                          key={idx}
+                          onClick={() => {
+                            setChoosenDay(el);
+                            setWork((prevWork) => ({
+                              ...prevWork,
+                              payDay: el,
+                            }));
+                          }}
+                        >
+                          <StyledBsCheckLg /> {el}
+                        </div>
                       ))}
                     </AccordionDetails>
-                  </div>
-                ) : (
+                  </Accordion>
+                  일에 받아요
+                </div>
+              </>
+            ) : (
+              <div className="payDay">
+                <Accordion
+                  className="chooseDay"
+                  expanded={expandedDate}
+                  onClick={() => {
+                    setExpandedDate(!expandedDate);
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>{chosenDate}</Typography>
+                  </AccordionSummary>
                   <AccordionDetails className="detailsDay">
                     {days.map((el, idx) => (
                       <div
                         key={idx}
                         onClick={() => {
-                          setExpandedDay(!expandedDay);
-                          setChoosenDay(el);
+                          setExpandedDate(!expandedDate);
+                          setChoosenDate(el);
                           setWork((prevWork) => ({
                             ...prevWork,
-                            payDay: el,
+                            payDate: el,
                           }));
                         }}
                       >
@@ -507,56 +574,57 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
                       </div>
                     ))}
                   </AccordionDetails>
-                )}
-              </Accordion>
-              일에 받아요
-            </div>
+                </Accordion>
+                일에 받아요
+              </div>
+            )}
           </Question>
         )}
 
-        {work.payPeriod.length > 0 && work.payDay > 0 && (
-          <>
-            <Color>
-              색상
-              {openColor && (
-                <>
-                  {colors.map((el, idx) => (
-                    <Circle
-                      key={idx}
-                      color={el}
-                      picker
-                      onClick={() => {
-                        setSelectColor(el);
-                        setOpenColor(false);
-                        setWork((prevWork) => ({ ...prevWork, color: el }));
-                      }}
-                    />
-                  ))}
-                </>
-              )}
-              <Circle
-                onClick={() => setOpenColor(!openColor)}
-                color={selectColor}
-                picker={false}
-              />
-            </Color>
-            <Insurance>
-              세금 및 4대보험
-              <div onClick={() => setIsSetting(!isSetting)}>
-                설정하기 <MdKeyboardArrowRight size="25" />
-              </div>
-            </Insurance>
+        {(work.payPeriod.length > 0 && work.payDate) ||
+          (work.payWeek.length > 0 && work.payDay.length > 0 && (
+            <>
+              <Color>
+                색상
+                {openColor && (
+                  <>
+                    {colors.map((el, idx) => (
+                      <Circle
+                        key={idx}
+                        color={el}
+                        picker
+                        onClick={() => {
+                          setSelectColor(el);
+                          setOpenColor(false);
+                          setWork((prevWork) => ({ ...prevWork, color: el }));
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
+                <Circle
+                  onClick={() => setOpenColor(!openColor)}
+                  color={selectColor}
+                  picker={false}
+                />
+              </Color>
+              <Insurance>
+                세금 및 4대보험
+                <div onClick={() => setIsSetting(!isSetting)}>
+                  설정하기 <MdKeyboardArrowRight size="25" />
+                </div>
+              </Insurance>
 
-            <SubmitBtn
-              onClick={() => {
-                handleIsAdd();
-                handleAddWork();
-              }}
-            >
-              저장하기
-            </SubmitBtn>
-          </>
-        )}
+              <SubmitBtn
+                onClick={() => {
+                  handleIsAdd();
+                  handleAddWork();
+                }}
+              >
+                저장하기
+              </SubmitBtn>
+            </>
+          ))}
       </Container>
 
       {isSetting && (
