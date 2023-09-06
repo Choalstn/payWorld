@@ -169,6 +169,7 @@ function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isAdd, setIsAdd] = useState<boolean>(false);
   const [isSet, setIstSet] = useState<boolean>(false);
+  const [id, setId] = useState<number>(0);
 
   const dispatch = useDispatch();
 
@@ -180,6 +181,11 @@ function Home() {
 
   const handleIsAdd = () => {
     setIsAdd(!isAdd);
+  };
+
+  const handelSetting = (id: number) => {
+    setId(id);
+    setIstSet(!isSet);
   };
 
   return (
@@ -216,7 +222,7 @@ function Home() {
               <div className="line" />
               <div className="pay"> ₩ {el.pay}</div>
               <div className="etc">
-                {isSet ? (
+                {isSet && id === idx ? (
                   <div className="editDelete">
                     <AiOutlineEdit />
                     <AiOutlineDelete
@@ -226,7 +232,7 @@ function Home() {
                     />
                   </div>
                 ) : (
-                  <HiOutlineDotsVertical onClick={() => setIstSet(!isSet)} />
+                  <HiOutlineDotsVertical onClick={() => handelSetting(idx)} />
                 )}
               </div>
             </WorkItem>
