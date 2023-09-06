@@ -579,49 +579,50 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
           </Question>
         )}
 
-        {work.payPeriod.length > 0 && work.payDay > 0 && (
-          <>
-            <Color>
-              색상
-              {openColor && (
-                <>
-                  {colors.map((el, idx) => (
-                    <Circle
-                      key={idx}
-                      color={el}
-                      picker
-                      onClick={() => {
-                        setSelectColor(el);
-                        setOpenColor(false);
-                        setWork((prevWork) => ({ ...prevWork, color: el }));
-                      }}
-                    />
-                  ))}
-                </>
-              )}
-              <Circle
-                onClick={() => setOpenColor(!openColor)}
-                color={selectColor}
-                picker={false}
-              />
-            </Color>
-            <Insurance>
-              세금 및 4대보험
-              <div onClick={() => setIsSetting(!isSetting)}>
-                설정하기 <MdKeyboardArrowRight size="25" />
-              </div>
-            </Insurance>
+        {(work.payPeriod.length > 0 && work.payDate) ||
+          (work.payWeek.length > 0 && work.payDay.length > 0 && (
+            <>
+              <Color>
+                색상
+                {openColor && (
+                  <>
+                    {colors.map((el, idx) => (
+                      <Circle
+                        key={idx}
+                        color={el}
+                        picker
+                        onClick={() => {
+                          setSelectColor(el);
+                          setOpenColor(false);
+                          setWork((prevWork) => ({ ...prevWork, color: el }));
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
+                <Circle
+                  onClick={() => setOpenColor(!openColor)}
+                  color={selectColor}
+                  picker={false}
+                />
+              </Color>
+              <Insurance>
+                세금 및 4대보험
+                <div onClick={() => setIsSetting(!isSetting)}>
+                  설정하기 <MdKeyboardArrowRight size="25" />
+                </div>
+              </Insurance>
 
-            <SubmitBtn
-              onClick={() => {
-                handleIsAdd();
-                handleAddWork();
-              }}
-            >
-              저장하기
-            </SubmitBtn>
-          </>
-        )}
+              <SubmitBtn
+                onClick={() => {
+                  handleIsAdd();
+                  handleAddWork();
+                }}
+              >
+                저장하기
+              </SubmitBtn>
+            </>
+          ))}
       </Container>
 
       {isSetting && (
