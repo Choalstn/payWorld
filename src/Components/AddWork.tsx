@@ -126,6 +126,22 @@ const Question = styled.div`
       }
     }
 
+    .weekPeriod {
+      display: flex;
+
+      .detailsDay {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      > div:first-child {
+        justify-content: center;
+        border-right: 1px solid #e3e2e3;
+      }
+    }
+
     .detailsDay {
       height: 23vh;
       overflow-y: scroll;
@@ -331,6 +347,15 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
   const period = ["한 달", "일주일", "2주", "당일", "한 달에 2번"];
   const days = Array.from({ length: 31 }, (_, index) => index + 1);
   const colors = ["#00ba3536", "#FF961B36", "#FF3B3B36", "#0084ff36"];
+  const week = [
+    "월요일",
+    "화요일",
+    "수요일",
+    "목요일",
+    "금요일",
+    "토요일",
+    "일요일",
+  ];
 
   const [work, setWork] = useState({
     name: "",
@@ -382,9 +407,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
     );
   };
 
-  useEffect(() => {
-    console.log(work);
-  }, [work]);
+  console.log(chosenPeriod);
   return (
     <>
       <Overlay onClick={() => handleIsAdd()} />
@@ -400,6 +423,8 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
         {work.name.length > 0 && (
           <Question>
             <Label>급여일</Label>
+
+            {/* 근무기간 */}
             <div className="payPeriod">
               <Accordion
                 className="choosePeriod"
@@ -432,6 +457,8 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
               </Accordion>
               근무한 돈을
             </div>
+
+            {/* 급여일  */}
             <div className="payDay">
               <Accordion
                 className="choosePeriod"
@@ -447,20 +474,40 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
                 >
                   <Typography>{chosenDay}</Typography>
                 </AccordionSummary>
-                <AccordionDetails className="detailsDay">
-                  {days.map((el, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => {
-                        setExpandedDay(!expandedDay);
-                        setChoosenDay(el);
-                        setWork((prevWork) => ({ ...prevWork, payDay: el }));
-                      }}
-                    >
-                      <StyledBsCheckLg /> {el}
-                    </div>
-                  ))}
-                </AccordionDetails>
+
+                {/* 근무기간에 따른 Details 조건부 */}
+                {chosenPeriod === "일주일" || chosenPeriod === "2주" ? (
+                  <div className="weekPeriod">
+                    <AccordionDetails className="detailsDay">
+                      <div>1주 후 </div>
+                      <div>2주 후 </div>
+                    </AccordionDetails>
+
+                    <AccordionDetails className="detailsDay">
+                      {week.map((el, idx) => (
+                        <div key={idx}>{el}</div>
+                      ))}
+                    </AccordionDetails>
+                  </div>
+                ) : (
+                  <AccordionDetails className="detailsDay">
+                    {days.map((el, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => {
+                          setExpandedDay(!expandedDay);
+                          setChoosenDay(el);
+                          setWork((prevWork) => ({
+                            ...prevWork,
+                            payDay: el,
+                          }));
+                        }}
+                      >
+                        <StyledBsCheckLg /> {el}
+                      </div>
+                    ))}
+                  </AccordionDetails>
+                )}
               </Accordion>
               일에 받아요
             </div>
