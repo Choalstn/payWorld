@@ -60,7 +60,7 @@ const Container = styled.div<ContainerProp>`
   background-color: white;
   border-radius: 20px;
   animation: ${({ isAdd }) =>
-    isAdd ? "slide-in 0.8s ease" : "slide-out 0.8s ease "} !important ;
+    isAdd ? "show 0.8s ease" : "hide 0.8s ease "} !important ;
 
   .question {
     font-size: 25px;
@@ -69,7 +69,7 @@ const Container = styled.div<ContainerProp>`
     margin-bottom: 30px;
   }
 
-  @keyframes slide-in {
+  @keyframes show {
     from {
       opacity: 0;
     }
@@ -78,13 +78,11 @@ const Container = styled.div<ContainerProp>`
     }
   }
 
-  @keyframes slide-out {
+  @keyframes hide {
     from {
-      transform: translateX(0);
       opacity: 1;
     }
     to {
-      transform: translateX(100%);
       opacity: 0;
     }
   }
@@ -581,50 +579,50 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
           </Question>
         )}
 
-        {(work.payPeriod.length > 0 && work.payDate) ||
-          (work.payWeek.length > 0 && work.payDay.length > 0 && (
-            <>
-              <Color>
-                색상
-                {openColor && (
-                  <>
-                    {colors.map((el, idx) => (
-                      <Circle
-                        key={idx}
-                        color={el}
-                        picker
-                        onClick={() => {
-                          setSelectColor(el);
-                          setOpenColor(false);
-                          setWork((prevWork) => ({ ...prevWork, color: el }));
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-                <Circle
-                  onClick={() => setOpenColor(!openColor)}
-                  color={selectColor}
-                  picker={false}
-                />
-              </Color>
-              <Insurance>
-                세금 및 4대보험
-                <div onClick={() => setIsSetting(!isSetting)}>
-                  설정하기 <MdKeyboardArrowRight size="25" />
-                </div>
-              </Insurance>
+        {(work.payWeek.length > 0 && work.payDay.length > 0) ||
+        (work.payPeriod.length > 0 && work.payDate > 0) ? (
+          <>
+            <Color>
+              색상
+              {openColor && (
+                <>
+                  {colors.map((el, idx) => (
+                    <Circle
+                      key={idx}
+                      color={el}
+                      picker
+                      onClick={() => {
+                        setSelectColor(el);
+                        setOpenColor(false);
+                        setWork((prevWork) => ({ ...prevWork, color: el }));
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+              <Circle
+                onClick={() => setOpenColor(!openColor)}
+                color={selectColor}
+                picker={false}
+              />
+            </Color>
+            <Insurance>
+              세금 및 4대보험
+              <div onClick={() => setIsSetting(!isSetting)}>
+                설정하기 <MdKeyboardArrowRight size="25" />
+              </div>
+            </Insurance>
 
-              <SubmitBtn
-                onClick={() => {
-                  handleIsAdd();
-                  handleAddWork();
-                }}
-              >
-                저장하기
-              </SubmitBtn>
-            </>
-          ))}
+            <SubmitBtn
+              onClick={() => {
+                handleIsAdd();
+                handleAddWork();
+              }}
+            >
+              저장하기
+            </SubmitBtn>
+          </>
+        ) : null}
       </Container>
 
       {isSetting && (
