@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -539,6 +540,19 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
                   일에 받아요
                 </div>
               </>
+            ) : chosenPeriod === "당일" ? (
+              <div className="payDay">
+                <Accordion className="chooseDay">
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>당일</Typography>
+                  </AccordionSummary>
+                </Accordion>
+                일에 받아요
+              </div>
             ) : (
               <div className="payDay">
                 <Accordion
@@ -579,54 +593,9 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
           </Question>
         )}
 
-<<<<<<< HEAD
-        {(work.payPeriod.length > 0 && work.payDate) ||
-          (work.payWeek.length > 0 && work.payDay.length > 0 && (
-            <>
-              <Color>
-                색상
-                {openColor && (
-                  <>
-                    {colors.map((el, idx) => (
-                      <Circle
-                        key={idx}
-                        color={el}
-                        picker
-                        onClick={() => {
-                          setSelectColor(el);
-                          setOpenColor(false);
-                          setWork((prevWork) => ({ ...prevWork, color: el }));
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-                <Circle
-                  onClick={() => setOpenColor(!openColor)}
-                  color={selectColor}
-                  picker={false}
-                />
-              </Color>
-              <Insurance>
-                세금 및 4대보험
-                <div onClick={() => setIsSetting(!isSetting)}>
-                  설정하기 <MdKeyboardArrowRight size="25" />
-                </div>
-              </Insurance>
-
-              <SubmitBtn
-                onClick={() => {
-                  handleIsAdd();
-                  handleAddWork();
-                }}
-              >
-                저장하기
-              </SubmitBtn>
-            </>
-          ))}
-=======
         {(work.payWeek.length > 0 && work.payDay.length > 0) ||
-        (work.payPeriod.length > 0 && work.payDate > 0) ? (
+        (work.payPeriod.length > 0 && work.payDate > 0) ||
+        work.payPeriod === "당일" ? (
           <>
             <Color>
               색상
@@ -669,7 +638,6 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
             </SubmitBtn>
           </>
         ) : null}
->>>>>>> 256f878e4a075ca391e1c7d4e88331088294c5bb
       </Container>
 
       {isSetting && (
