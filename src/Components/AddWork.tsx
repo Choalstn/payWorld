@@ -362,6 +362,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
     "토요일",
     "일요일",
   ];
+  const twicePay = ["1일, 15일", "1일, 16일", "7일, 21일"];
 
   const [work, setWork] = useState({
     name: "",
@@ -553,6 +554,42 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
                 </Accordion>
                 일에 받아요
               </div>
+            ) : chosenPeriod === "한 달에 2번" ? (
+              <div className="payDay">
+                <Accordion
+                  className="chooseDay"
+                  expanded={expandedDate}
+                  onClick={() => {
+                    setExpandedDate(!expandedDate);
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>{chosenDay}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails className="detailsWeek">
+                    {twicePay.map((el, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => {
+                          setExpandedDate(!expandedDate);
+                          setChoosenDay(el);
+                          setWork((prevWork) => ({
+                            ...prevWork,
+                            payDay: el,
+                          }));
+                        }}
+                      >
+                        <StyledBsCheckLg /> {el}
+                      </div>
+                    ))}
+                  </AccordionDetails>
+                </Accordion>
+                일에 받아요
+              </div>
             ) : (
               <div className="payDay">
                 <Accordion
@@ -595,6 +632,7 @@ function AddWork({ handleIsAdd, isAdd }: AddWorkProp) {
 
         {(work.payWeek.length > 0 && work.payDay.length > 0) ||
         (work.payPeriod.length > 0 && work.payDate > 0) ||
+        (work.payPeriod.length > 0 && work.payDay.length > 0) ||
         work.payPeriod === "당일" ? (
           <>
             <Color>
